@@ -1,63 +1,70 @@
 package fr.gol.multi;
 
 import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  */
 public class Cells {
 
-    private Boolean[][] livingCells = new Boolean[5][5] ;
+    private final int width;
+    private final int heigth;
+    private Set<Position> livingCells = new HashSet<>();
+
+
+    public Cells(int maxX, int maxY) {
+        this.width = maxX;
+        this.heigth=maxY;
+    }
+
+    public Cells() {
+        this.width = 10;
+        this.heigth= 10;
+    }
 
     public long count(){
-        return Arrays.stream(livingCells).flatMap(Arrays::stream).filter(c->c== TRUE).count();
+        return livingCells.size();
     }
 
     public void add(int x, int y) {
-        livingCells[x][y]= TRUE;
+        livingCells.add(new Position(x,y));
     }
 
     public Cells tic(){
         Cells afterTic = new Cells();
-        for(int x = 0; x <livingCells.length; x++) {
-            for (int y = 0; y < livingCells[x].length; y++) {
-                long nbNeigbours = Arrays.asList(
-                        getCell(x+1,y),
-                        getCell(x-1,y),
-                        getCell(x,y+1),
-                        getCell(x,y-1),
-                        getCell(x+1,y+1),
-                        getCell(x-1,y-1),
-                        getCell(x+1,y-1),
-                        getCell(x-1,y+1)).stream()
-                        .filter(c -> c)
-                        .count();
-                if( (getCell(x,y) && nbNeigbours == 2) || nbNeigbours == 3){
-                    afterTic.add(x,y);
-                }
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < heigth; y++) {
+
+            long nbNeigbours = Arrays.asList(
+                    getCell(x + 1, y),
+                    getCell(x - 1, y),
+                    getCell(x, y + 1),
+                    getCell(x, y - 1),
+                    getCell(x + 1, y + 1),
+                    getCell(x - 1, y - 1),
+                    getCell(x + 1, y - 1),
+                    getCell(x - 1, y + 1)).stream()
+                    .filter(c -> c)
+                    .count();
+            if ((getCell(x, y) && nbNeigbours == 2) || nbNeigbours == 3) {
+                afterTic.add(x, y);
             }
         }
-        return afterTic;
+    }
+    return afterTic;
     }
     private Boolean getCell(int x,int y){
-        try {
-            return Optional.ofNullable(livingCells[x][y]).orElse(FALSE);
-        }catch(ArrayIndexOutOfBoundsException e){
-            return FALSE;
-        }
+        return livingCells.contains(new Position(x,y));
     }
     @Override
     public String toString() {
         return "Cells{" +
-                "livingCells=\n " + Arrays.stream(livingCells).map(Arrays::toString).map(x->x.concat("\n")).collect(Collectors.toList()) +
+                "livingCells=\n " + livingCells +
                 '}';
     }
 
     public boolean hasCell(int x, int y) {
-        return (livingCells[x][y] == TRUE) || FALSE;
+        return livingCells.contains(new Position(x,y));
     }
 }
