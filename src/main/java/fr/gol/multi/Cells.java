@@ -1,84 +1,46 @@
 package fr.gol.multi;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Optional.ofNullable;
 
 /**
+ *
  */
 public class Cells {
+    public static final Cell LIVING_CELL = new Cell();
+    private Map<Position,Cell> cells = new HashMap<>();
 
-    private final GridSize size;
-    private Map<Position,Cell> livingCells = new HashMap<>();
+    public Cells(){
 
-
-    private Cells(int maxX, int maxY) {
-        this.size=new GridSize(maxX,maxY);
     }
 
-    private Cells(int squareSize) {
-        this.size=new GridSize(squareSize,squareSize);
+    public long size() {
+        return cells.size();
     }
 
-    private Cells(GridSize size) {
-        this.size=size;
+    public void addLivingCell(Position position) {
+        cells.put(position, LIVING_CELL);
     }
 
-    public static Cells square(int size){
-        return new Cells(size);
+    public Cell getCell(int x, int y) {
+        return ofNullable(cells.get(new Position(x, y))).orElse(Cell.DEAD);
     }
 
-    public static Cells grid(int width,int height){
-        return new Cells(width,height);
+
+    public List<Cell> neighboursOf(int x, int y) {
+        return Arrays.asList(
+                getCell(x + 1, y),
+                getCell(x - 1, y),
+                getCell(x, y + 1),
+                getCell(x, y - 1),
+                getCell(x + 1, y + 1),
+                getCell(x - 1, y - 1),
+                getCell(x + 1, y - 1),
+                getCell(x - 1, y + 1));
     }
 
-    public long count(){
-        return livingCells.size();
-    }
-
-    public void add(int x, int y) {
-        if(!size.accept(x,y)){
-            throw new IllegalArgumentException("Grid with size of "+size+" not accept position "+new Position(x,y));
-        }
-        livingCells.put(new Position(x, y), new Cell());
-    }
-
-    public Cells tic(){
-        Cells afterTic = new Cells(size);
-        for (int x = 0; x < size.getWidth(); x++) {
-            for (int y = 0; y < size.getHeight(); y++) {
-
-            long nbNeigbours = Arrays.asList(
-                    getCell(x + 1, y),
-                    getCell(x - 1, y),
-                    getCell(x, y + 1),
-                    getCell(x, y - 1),
-                    getCell(x + 1, y + 1),
-                    getCell(x - 1, y - 1),
-                    getCell(x + 1, y - 1),
-                    getCell(x - 1, y + 1)).stream()
-                    .filter(Cell::isLiving)
-                    .count();
-            if ((getCell(x, y).isLiving() && nbNeigbours == 2) || nbNeigbours == 3) {
-                afterTic.add(x, y);
-            }
-        }
-    }
-    return afterTic;
-    }
-
-    private Cell getCell(int x,int y){
-        return ofNullable(livingCells.get(new Position(x, y))).orElse(Cell.DEAD);
-    }
-
-    @Override
-    public String toString() {
-        return "Cells{" +
-                "livingCells=\n " + livingCells +
-                '}';
-    }
-
-    public boolean hasCell(int x, int y) {
-        return getCell(x,y).isLiving();
-    }
 }

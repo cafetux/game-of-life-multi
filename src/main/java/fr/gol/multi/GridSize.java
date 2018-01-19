@@ -22,4 +22,12 @@ public class GridSize {
     public boolean accept(int x, int y) {
         return x>0 && y>0 && x<=width && y<=height;
     }
+
+    @Override
+    public String toString() {
+        return "GridSize{" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
+    }
 }
