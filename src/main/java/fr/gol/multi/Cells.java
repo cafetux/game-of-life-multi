@@ -8,19 +8,28 @@ import static java.util.Optional.ofNullable;
  */
 public class Cells {
 
-    private final int width;
-    private final int heigth;
+    private final GridSize size;
     private Map<Position,Cell> livingCells = new HashMap<>();
 
 
-    public Cells(int maxX, int maxY) {
-        this.width = maxX;
-        this.heigth=maxY;
+    private Cells(int maxX, int maxY) {
+        this.size=new GridSize(maxX,maxY);
     }
 
-    public Cells() {
-        this.width = 10;
-        this.heigth= 10;
+    private Cells(int squareSize) {
+        this.size=new GridSize(squareSize,squareSize);
+    }
+
+    private Cells(GridSize size) {
+        this.size=size;
+    }
+
+    public static Cells square(int size){
+        return new Cells(size);
+    }
+
+    public static Cells grid(int width,int height){
+        return new Cells(width,height);
     }
 
     public long count(){
@@ -28,13 +37,16 @@ public class Cells {
     }
 
     public void add(int x, int y) {
+        if(!size.accept(x,y)){
+            throw new IllegalArgumentException("Grid with size of "+size+" not accept position "+new Position(x,y));
+        }
         livingCells.put(new Position(x, y), new Cell());
     }
 
     public Cells tic(){
-        Cells afterTic = new Cells();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < heigth; y++) {
+        Cells afterTic = new Cells(size);
+        for (int x = 0; x < size.getWidth(); x++) {
+            for (int y = 0; y < size.getHeight(); y++) {
 
             long nbNeigbours = Arrays.asList(
                     getCell(x + 1, y),
