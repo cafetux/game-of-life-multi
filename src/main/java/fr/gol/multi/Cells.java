@@ -1,8 +1,8 @@
 package fr.gol.multi;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.Optional.ofNullable;
 
 /**
  */
@@ -10,7 +10,7 @@ public class Cells {
 
     private final int width;
     private final int heigth;
-    private Set<Position> livingCells = new HashSet<>();
+    private Map<Position,Cell> livingCells = new HashMap<>();
 
 
     public Cells(int maxX, int maxY) {
@@ -28,7 +28,7 @@ public class Cells {
     }
 
     public void add(int x, int y) {
-        livingCells.add(new Position(x,y));
+        livingCells.put(new Position(x, y), new Cell());
     }
 
     public Cells tic(){
@@ -45,18 +45,20 @@ public class Cells {
                     getCell(x - 1, y - 1),
                     getCell(x + 1, y - 1),
                     getCell(x - 1, y + 1)).stream()
-                    .filter(c -> c)
+                    .filter(Cell::isLiving)
                     .count();
-            if ((getCell(x, y) && nbNeigbours == 2) || nbNeigbours == 3) {
+            if ((getCell(x, y).isLiving() && nbNeigbours == 2) || nbNeigbours == 3) {
                 afterTic.add(x, y);
             }
         }
     }
     return afterTic;
     }
-    private Boolean getCell(int x,int y){
-        return livingCells.contains(new Position(x,y));
+
+    private Cell getCell(int x,int y){
+        return ofNullable(livingCells.get(new Position(x, y))).orElse(Cell.DEAD);
     }
+
     @Override
     public String toString() {
         return "Cells{" +
@@ -65,6 +67,6 @@ public class Cells {
     }
 
     public boolean hasCell(int x, int y) {
-        return livingCells.contains(new Position(x,y));
+        return getCell(x,y).isLiving();
     }
 }
