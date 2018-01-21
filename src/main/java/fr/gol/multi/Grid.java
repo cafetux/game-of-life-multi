@@ -1,5 +1,8 @@
 package fr.gol.multi;
 
+import fr.gol.multi.cell.Cell;
+import fr.gol.multi.cell.predicate.OwnedByPlayer;
+
 /**
  */
 public class Grid {
@@ -32,11 +35,11 @@ public class Grid {
         return livingCells.size();
     }
 
-    public void add(int x, int y) {
+    public void add(int x, int y, Player player) {
         if(!size.accept(x,y)){
             throw new IllegalArgumentException("Grid with size of "+size+" not accept position "+new Position(x,y));
         }
-        livingCells.addLivingCell(new Position(x, y));
+        livingCells.addLivingCell(new Position(x, y),player);
     }
 
     public Grid tic(){
@@ -49,7 +52,7 @@ public class Grid {
                     .filter(Cell::isLiving)
                     .count();
             if ((hasCell(x, y) && nbNeigbours == 2) || nbNeigbours == 3) {
-                afterTic.add(x, y);
+                afterTic.add(x, y, null);
             }
         }
     }
@@ -66,5 +69,9 @@ public class Grid {
 
     public boolean hasCell(int x, int y) {
         return livingCells.getCell(x,y).isLiving();
+    }
+
+    public long countLivingCells(String nickname) {
+        return livingCells.filter(new OwnedByPlayer(nickname)).size();
     }
 }

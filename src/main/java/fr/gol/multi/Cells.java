@@ -1,9 +1,13 @@
 package fr.gol.multi;
 
+import fr.gol.multi.cell.Cell;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
@@ -11,19 +15,23 @@ import static java.util.Optional.ofNullable;
  *
  */
 public class Cells {
-    public static final Cell LIVING_CELL = new Cell();
+
     private Map<Position,Cell> cells = new HashMap<>();
 
     public Cells(){
 
     }
 
+    private Cells(Map<Position, Cell> cells) {
+        this.cells.putAll(cells);
+    }
+
     public long size() {
         return cells.size();
     }
 
-    public void addLivingCell(Position position) {
-        cells.put(position, LIVING_CELL);
+    public void addLivingCell(Position position, Player player) {
+        cells.put(position, new Cell(player));
     }
 
     public Cell getCell(int x, int y) {
@@ -41,6 +49,10 @@ public class Cells {
                 getCell(x - 1, y - 1),
                 getCell(x + 1, y - 1),
                 getCell(x - 1, y + 1));
+    }
+
+    public Cells filter(Predicate<Cell> filter){
+        return new Cells(this.cells.entrySet().stream().filter(e->filter.test(e.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
 }

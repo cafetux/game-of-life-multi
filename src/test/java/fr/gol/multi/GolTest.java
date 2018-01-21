@@ -3,6 +3,7 @@ package fr.gol.multi;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
 
+import static fr.gol.multi.MutiplayerTest.CAFETUX;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -18,16 +19,20 @@ public class GolTest {
     @Test
     public void should_add_living_cell_to_system(){
         Grid grid = Grid.square(10);
-        grid.add(3,3);
+        addCell(grid, 3, 3);
         assertThat(grid).has(ONE_CELL);
+    }
+
+    private void addCell(Grid grid, int x, int y) {
+        grid.add(x, y, CAFETUX);
     }
 
     @Test
     public void should_add_some_cells_to_system(){
         Grid grid = Grid.square(10);
-        grid.add(3,3);
-        grid.add(2,1);
-        grid.add(3,1);
+        addCell(grid, 3, 3);
+        addCell(grid, 2, 1);
+        addCell(grid, 3, 1);
 
         assertThat(grid).has(THREE_CELLS);   }
 
@@ -41,7 +46,7 @@ public class GolTest {
     @Test
     public void should_die_when_only_one_cell(){
         Grid grid = Grid.square(10);
-        grid.add(3,3);
+        addCell(grid, 3, 3);
         grid =tic(grid);
         assertThat(grid).has(NO_CELLS);
     }
@@ -55,9 +60,9 @@ public class GolTest {
     @Test
     public void should_born_when_three_neigbours(){
         Grid grid = Grid.square(10);
-        grid.add(3,3);
-        grid.add(2,2);
-        grid.add(3,2);
+        addCell(grid, 3, 3);
+        addCell(grid, 2, 2);
+        addCell(grid, 3, 2);
         assertThat(tic(grid).hasCell(2,3)).as(grid.toString() + "\n\n" + tic(grid).toString() + "\n should have living cell on [2,3]").isTrue();
     }
 
@@ -70,8 +75,8 @@ public class GolTest {
     @Test
     public void should_not_born_when_two_neigbours(){
         Grid grid = Grid.square(10);
-        grid.add(3,3);
-        grid.add(2,2);
+        addCell(grid, 3, 3);
+        addCell(grid, 2, 2);
         assertThat(tic(grid).hasCell(3,2)).as(grid.toString() + "\n\n" + tic(grid).toString() + "\n should have no cell on [3,2]").isFalse();
         assertThat(tic(grid).hasCell(2,3)).as(grid.toString() + "\n\n" + tic(grid).toString() + "\n should have no cell on [2,3]").isFalse();
     }
@@ -85,10 +90,10 @@ public class GolTest {
     @Test
     public void should_stance_when_three_neigbours(){
         Grid grid = Grid.square(10);
-        grid.add(2,3);
-        grid.add(3,3);
-        grid.add(2,2);
-        grid.add(3,2);
+        addCell(grid, 2, 3);
+        addCell(grid, 3, 3);
+        addCell(grid, 2, 2);
+        addCell(grid, 3, 2);
         result = tic(grid);
         assertThat(result.hasCell(2, 3)).as(grid.toString()+"\n\n"+ result.toString() + "\n should have living cell on [2,3]").isTrue();
         assertThat(result.hasCell(3, 3)).as(grid.toString()+"\n\n"+ result.toString() + "\n should have living cell on [2,3]").isTrue();
@@ -105,9 +110,9 @@ public class GolTest {
     @Test
     public void should_stance_when_two_neigbours(){
         Grid grid = Grid.square(10);
-        grid.add(2,2);
-        grid.add(3,2);
-        grid.add(4,2);
+        addCell(grid, 2, 2);
+        addCell(grid, 3, 2);
+        addCell(grid, 4, 2);
 
         result = tic(grid);
 
@@ -123,11 +128,11 @@ public class GolTest {
     @Test
     public void should_die_when_too_many_neigbours(){
         Grid grid = Grid.square(10);
-        grid.add(2,1);
-        grid.add(3,1);
-        grid.add(3,2);
-        grid.add(3,3);
-        grid.add(4,3);
+        addCell(grid, 2, 1);
+        addCell(grid, 3, 1);
+        addCell(grid, 3, 2);
+        addCell(grid, 3, 3);
+        addCell(grid, 4, 3);
 
         result = tic(grid);
 
@@ -137,13 +142,13 @@ public class GolTest {
     @Test(expected = IllegalArgumentException.class)
     public void should_cannot_add_cell_out_of_the_grid(){
         Grid grid = Grid.square(3);
-        grid.add(4,4);
+        addCell(grid, 4, 4);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void should_reject_0_as_valid_coordinate(){
         Grid grid = Grid.square(3);
-        grid.add(0,0);
+        addCell(grid, 0, 0);
     }
 
     private Grid tic(Grid grid) {
