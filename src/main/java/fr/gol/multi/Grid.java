@@ -52,7 +52,12 @@ public class Grid {
                     .filter(Cell::isLiving)
                     .count();
             if ((hasCell(x, y) && nbNeigbours == 2) || nbNeigbours == 3) {
-                afterTic.add(x, y, null);
+                Player owner = livingCells.getCell(x, y).getOwner();
+                if(owner==null){
+                    owner = livingCells.neighboursOf(x,y).stream()
+                            .filter(Cell::isLiving).findAny().map(Cell::getOwner).orElse(null);
+                }
+                afterTic.add(x, y, owner);
             }
         }
     }
@@ -73,5 +78,9 @@ public class Grid {
 
     public long countLivingCells(String nickname) {
         return livingCells.filter(new OwnedByPlayer(nickname)).size();
+    }
+
+    public Player ownerOfCell(int x, int y) {
+        return livingCells.getCell(x,y).getOwner();
     }
 }

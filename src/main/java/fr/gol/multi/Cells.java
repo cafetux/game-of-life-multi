@@ -2,10 +2,7 @@ package fr.gol.multi;
 
 import fr.gol.multi.cell.Cell;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -40,7 +37,8 @@ public class Cells {
 
 
     public List<Cell> neighboursOf(int x, int y) {
-        return Arrays.asList(
+        List<Cell> neighbours = new ArrayList<>();
+        neighbours.addAll(Arrays.asList(
                 getCell(x + 1, y),
                 getCell(x - 1, y),
                 getCell(x, y + 1),
@@ -48,7 +46,8 @@ public class Cells {
                 getCell(x + 1, y + 1),
                 getCell(x - 1, y - 1),
                 getCell(x + 1, y - 1),
-                getCell(x - 1, y + 1));
+                getCell(x - 1, y + 1)));
+        return neighbours;
     }
 
     public Cells filter(Predicate<Cell> filter){
