@@ -1,5 +1,7 @@
 package fr.gol.multi;
 
+import fr.gol.multi.cell.Cells;
+import fr.gol.multi.player.Player;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,10 +1,12 @@
-package fr.gol.multi;
+package fr.gol.multi.cell;
 
-import fr.gol.multi.cell.Cell;
+import fr.gol.multi.Position;
+import fr.gol.multi.player.Player;
 
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
@@ -13,6 +15,7 @@ import static java.util.Optional.ofNullable;
  */
 public class Cells {
 
+    public static final java.util.stream.Collector<Map.Entry<Position, Cell>, ?, Map<Position, Cell>> TO_MAP = Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue);
     private Map<Position,Cell> cells = new HashMap<>();
 
     public Cells(){
@@ -54,7 +57,11 @@ public class Cells {
     }
 
     public Cells filter(Predicate<Cell> filter){
-        return new Cells(this.cells.entrySet().stream().filter(e->filter.test(e.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        return new Cells($(filter).collect(TO_MAP));
+    }
+
+    private Stream<Map.Entry<Position, Cell>> $(Predicate<Cell> filter) {
+        return this.cells.entrySet().stream().filter(e->filter.test(e.getValue()));
     }
 
 }

@@ -1,4 +1,4 @@
-package fr.gol.multi;
+package fr.gol.multi.player;
 
 /**
  *

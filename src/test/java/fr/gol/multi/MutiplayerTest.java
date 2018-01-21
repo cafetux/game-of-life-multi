@@ -1,8 +1,9 @@
 package fr.gol.multi;
 
+import fr.gol.multi.player.Player;
 import org.junit.Test;
 
-import static fr.gol.multi.Player.NEUTRAL;
+import static fr.gol.multi.player.Player.NEUTRAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

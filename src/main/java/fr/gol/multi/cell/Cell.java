@@ -1,11 +1,12 @@
 package fr.gol.multi.cell;
 
-import fr.gol.multi.Player;
+import fr.gol.multi.player.Owned;
+import fr.gol.multi.player.Player;
 
 /**
  *
  */
-public class Cell {
+public class Cell implements Owned {
 
     public static final Cell DEAD = new Cell(null){
         public boolean isLiving(){
@@ -23,6 +24,7 @@ public class Cell {
         return true;
     }
 
+    @Override
     public Player getOwner() {
         return owner;
     }
