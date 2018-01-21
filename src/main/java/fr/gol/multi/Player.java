@@ -5,6 +5,7 @@ package fr.gol.multi;
  */
 public class Player {
 
+    public static final Player NEUTRAL = new Player("NEUTRAL");
     private final String nickname;
 
     public Player(String nickame) {
