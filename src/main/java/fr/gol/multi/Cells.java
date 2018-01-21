@@ -32,21 +32,24 @@ public class Cells {
     }
 
     public Cell getCell(int x, int y) {
-        return ofNullable(cells.get(new Position(x, y))).orElse(Cell.DEAD);
+        return maybeCell(x, y).orElse(Cell.DEAD);
+    }
+
+    private Optional<Cell> maybeCell(int x, int y) {
+        return ofNullable(cells.get(new Position(x, y)));
     }
 
 
     public List<Cell> neighboursOf(int x, int y) {
         List<Cell> neighbours = new ArrayList<>();
-        neighbours.addAll(Arrays.asList(
-                getCell(x + 1, y),
-                getCell(x - 1, y),
-                getCell(x, y + 1),
-                getCell(x, y - 1),
-                getCell(x + 1, y + 1),
-                getCell(x - 1, y - 1),
-                getCell(x + 1, y - 1),
-                getCell(x - 1, y + 1)));
+        maybeCell(x + 1, y).ifPresent(neighbours::add);
+        maybeCell(x - 1, y).ifPresent(neighbours::add);
+        maybeCell(x, y + 1).ifPresent(neighbours::add);
+        maybeCell(x, y - 1).ifPresent(neighbours::add);
+        maybeCell(x + 1, y + 1).ifPresent(neighbours::add);
+        maybeCell(x + 1, y - 1).ifPresent(neighbours::add);
+        maybeCell(x - 1, y + 1).ifPresent(neighbours::add);
+        maybeCell(x - 1, y - 1).ifPresent(neighbours::add);
         return neighbours;
     }
 

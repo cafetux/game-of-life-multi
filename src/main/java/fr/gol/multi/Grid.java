@@ -1,6 +1,5 @@
 package fr.gol.multi;
 
-import fr.gol.multi.cell.Cell;
 import fr.gol.multi.cell.predicate.OwnedByPlayer;
 
 /**
@@ -47,15 +46,11 @@ public class Grid {
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
 
-            long nbNeigbours = livingCells.neighboursOf(x, y)
-                    .stream()
-                    .filter(Cell::isLiving)
-                    .count();
+            long nbNeigbours = livingCells.neighboursOf(x, y).size();
             if ((hasCell(x, y) && nbNeigbours == 2) || nbNeigbours == 3) {
                 Player owner = livingCells.getCell(x, y).getOwner();
                 if(owner==null){
-                    owner = livingCells.neighboursOf(x,y).stream()
-                            .filter(Cell::isLiving).findAny().map(Cell::getOwner).orElse(null);
+                    owner = livingCells.neighboursOf(x,y).get(0).getOwner();
                 }
                 afterTic.add(x, y, owner);
             }
